@@ -1,9 +1,9 @@
-package main
+package delayed_test
 
 import (
 	"fmt"
 	"log"
-	"playground/lang/dedup/delayed"
+	"sthaha/delayed"
 	"sync"
 	"time"
 )
@@ -96,18 +96,7 @@ func simulateIdler(wg *sync.WaitGroup) {
 	idle()
 }
 
-func simulateIdle(wg *sync.WaitGroup) {
-	defer wg.Done()
-	idle()
-	time.Sleep(100 * time.Millisecond)
-	idle()
-	time.Sleep(100 * time.Millisecond)
-	idle()
-	time.Sleep(5 * time.Second)
-	idle()
-}
-
-func main() {
+func Example_idler() {
 	info := logger("main")
 	wg := &sync.WaitGroup{}
 
@@ -116,4 +105,9 @@ func main() {
 	simulateIdler(wg)
 	wg.Wait()
 	info("done")
+	// HACK: output below is used as hack to run the test
+	// run this using go test -race -run Example
+
+	// Output:
+	//
 }
