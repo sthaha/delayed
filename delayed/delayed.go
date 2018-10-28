@@ -1,8 +1,6 @@
 package delayed
 
 import (
-	"fmt"
-	"log"
 	"sync"
 	"time"
 )
@@ -13,27 +11,33 @@ type Fn struct {
 	m sync.Mutex
 }
 
-func logger(context string) func(string, ...interface{}) {
-	return func(format string, v ...interface{}) {
-		f := fmt.Sprintf("[%10s]: %s", context, format)
-		log.Printf(f, v...)
-	}
-}
+var debug = logger("delayed")
 
 // Call waits for the duration to elapse and then calls f
 // in its own goroutine. It returns a DelayedCall that can be used to
 // over
-func (df *Fn) Call(d time.Duration, fn func()) *Fn {
-	df.m.Lock()
-	defer df.m.Unlock()
+func (f *Fn) Call(d time.Duration, fn func()) *Fn {
 
-	info := logger("delayed")
-	if df.t != nil {
-		info("stopping old")
-		df.t.Stop()
+	f.Cancel()
+
+	debug("Scheduled to run after %v", d)
+
+	f.m.Lock()
+	defer f.m.Unlock()
+	f.t = time.AfterFunc(d, fn)
+	return f
+}
+
+// Cancel cancels the function that was scheduled by Call
+func (f *Fn) Cancel() bool {
+	f.m.Lock()
+	defer f.m.Unlock()
+
+	if f.t == nil {
+		return false
 	}
 
-	info("Scheduled to run after %v", d)
-	df.t = time.AfterFunc(d, fn)
-	return df
+	debug("cancelling delayed call")
+	f.t.Stop()
+	return true
 }
