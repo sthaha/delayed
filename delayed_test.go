@@ -7,7 +7,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_simple(t *testing.T) {
+func Test_Call(t *testing.T) {
+	s := newSpy(t)
+
+	fn := Call(200*time.Millisecond, s.hook(args{"version": 1}))
+
+	time.Sleep(250 * time.Millisecond)
+	assert.Equal(t, 1, s.called(), "must be called once")
+
+	time.Sleep(250 * time.Millisecond)
+	assert.Equal(t, 1, s.called(), "must be called once")
+	assert.Equal(t, 1, s.args()["version"])
+	assert.False(t, fn.Cancel())
+}
+
+func Test_fn_call(t *testing.T) {
 	s := newSpy(t)
 
 	fn := &Fn{}
@@ -15,6 +29,7 @@ func Test_simple(t *testing.T) {
 
 	time.Sleep(250 * time.Millisecond)
 	assert.Equal(t, 1, s.called(), "must be called once")
+
 	time.Sleep(250 * time.Millisecond)
 	assert.Equal(t, 1, s.called(), "must be called once")
 	assert.Equal(t, 1, s.args()["version"])

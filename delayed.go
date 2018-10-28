@@ -13,6 +13,13 @@ type Fn struct {
 
 var debug = logger("delayed")
 
+// Call executes a fn after the duration and returns a handle to the
+// function so that it can be cancelled or overridden
+func Call(d time.Duration, fn func()) *Fn {
+	f := &Fn{}
+	return f.Call(d, fn)
+}
+
 // Call waits for the duration to elapse and then calls f
 // in its own goroutine. It returns a DelayedCall that can be used to
 // over
@@ -38,6 +45,5 @@ func (f *Fn) Cancel() bool {
 	}
 
 	debug("cancelling delayed call")
-	f.t.Stop()
-	return true
+	return f.t.Stop()
 }
