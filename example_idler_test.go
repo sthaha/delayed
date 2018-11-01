@@ -3,9 +3,10 @@ package delayed_test
 import (
 	"fmt"
 	"log"
-	"sthaha/delayed"
 	"sync"
 	"time"
+
+	"github.com/sthaha/delayed"
 )
 
 type idlerstat int
