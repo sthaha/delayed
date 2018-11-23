@@ -2,7 +2,6 @@ package delayed
 
 import (
 	"sync"
-	"testing"
 
 	"github.com/davecgh/go-spew/spew"
 )
@@ -11,15 +10,9 @@ import (
 type args map[string]interface{}
 
 type spy struct {
+	m      sync.RWMutex
 	calls  int
 	fnArgs args
-
-	t *testing.T
-	m *sync.RWMutex
-}
-
-func newSpy(t *testing.T) *spy {
-	return &spy{t: t, m: &sync.RWMutex{}}
 }
 
 func (s *spy) hook(v args) func() {

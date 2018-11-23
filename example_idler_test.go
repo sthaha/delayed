@@ -39,7 +39,7 @@ func unidle() {
 
 	info("unidle: going to delayed unidle")
 
-	fn.Call(3*time.Second, func() {
+	fn.Reset(3*time.Second, func() {
 		info("unidle: unidling ...")
 		if status() == running {
 			info("unidle: No need to idle since it is already unidled")
@@ -68,7 +68,7 @@ func idle() {
 
 	info("going to delayed idle")
 
-	fn.Call(3*time.Second, func() {
+	fn.Reset(3*time.Second, func() {
 
 		if status() == idled {
 			info("No need to idle since it is already idled")
