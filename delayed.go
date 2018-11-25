@@ -6,6 +6,15 @@ import (
 	"time"
 )
 
+// Callable is the interface a delayed function call must satisfy
+type Callable interface {
+	Call() error
+	Cancel() bool
+	Reset(time.Duration, func()) error
+	ResetDelay(time.Duration) error
+	ResetFunc(func()) error
+}
+
 // Fn represents a fun to called after some duration has elapsed
 type Fn struct {
 	m  sync.Mutex
