@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/sthaha/delayed/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -54,16 +55,16 @@ func TestInterface_works(t *testing.T) {
 	var c delayedFn = &Fn{}
 	assert.Error(t, c.Call())
 
-	s := &spy{}
+	s := &testutils.Spy{}
 
-	err := c.Reset(20*time.Millisecond, s.hook(args{"version": 1}))
+	err := c.Reset(20*time.Millisecond, s.Hook(testutils.Args{"version": 1}))
 	assert.NoError(t, err, "must be created")
 
 	time.Sleep(30 * time.Millisecond)
-	assert.Equal(t, 1, s.called(), "must be called once")
+	assert.Equal(t, 1, s.Called(), "must be called once")
 
 	time.Sleep(30 * time.Millisecond)
-	assert.Equal(t, 1, s.called(), "must be called once")
-	assert.Equal(t, 1, s.args()["version"])
+	assert.Equal(t, 1, s.Called(), "must be called once")
+	assert.Equal(t, 1, s.Args()["version"])
 	assert.False(t, c.Cancel(), "cancelling already executed must return false")
 }

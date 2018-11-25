@@ -7,16 +7,17 @@ import (
 	"time"
 
 	"github.com/sthaha/delayed"
+	"github.com/sthaha/delayed/testutils"
 )
 
 func Example_long_running_fn() {
 	//
-	debug := logger("main")
+	debug := testutils.Logger("main")
 
 	var count uint64
 
 	fn, _ := delayed.Call(100*time.Millisecond, func() {
-		debug := logger("first")
+		debug := testutils.Logger("first")
 
 		debug("going to execute")
 		atomic.AddUint64(&count, 1)
@@ -32,7 +33,7 @@ func Example_long_running_fn() {
 	debug("going to schedule another")
 
 	fn.Reset(100*time.Millisecond, func() {
-		debug := logger("second")
+		debug := testutils.Logger("second")
 
 		debug("going to execute")
 		atomic.AddUint64(&count, 1)
@@ -58,7 +59,7 @@ func Example_long_running_fn() {
 }
 
 func Example_long_running_fn_fixed() {
-	debug := logger("main")
+	debug := testutils.Logger("main")
 
 	var count uint64
 
@@ -68,7 +69,7 @@ func Example_long_running_fn_fixed() {
 		m.Lock()
 		defer m.Unlock()
 
-		debug := logger("first")
+		debug := testutils.Logger("first")
 
 		debug("going to execute")
 		atomic.AddUint64(&count, 1)
@@ -86,7 +87,7 @@ func Example_long_running_fn_fixed() {
 	fn.Reset(100*time.Millisecond, func() {
 		m.Lock()
 		defer m.Unlock()
-		debug := logger("second")
+		debug := testutils.Logger("second")
 
 		debug("going to execute")
 		atomic.AddUint64(&count, 1)

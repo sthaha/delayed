@@ -1,12 +1,11 @@
 package delayed_test
 
 import (
-	"fmt"
-	"log"
 	"sync"
 	"time"
 
 	"github.com/sthaha/delayed"
+	"github.com/sthaha/delayed/testutils"
 )
 
 type idlerstat int
@@ -27,7 +26,7 @@ var unidleRequested = false
 var fn delayed.Fn
 
 func unidle() {
-	info := logger("unidle")
+	info := testutils.Logger("unidle")
 
 	info("-------------------------------")
 	if unidleRequested {
@@ -50,15 +49,8 @@ func unidle() {
 	})
 }
 
-func logger(context string) func(string, ...interface{}) {
-	return func(format string, v ...interface{}) {
-		f := fmt.Sprintf("[%10s]: %s", context, format)
-		log.Printf(f, v...)
-	}
-}
-
 func idle() {
-	info := logger("idle")
+	info := testutils.Logger("idle")
 
 	info("-------------------------------")
 	if unidleRequested {
@@ -98,7 +90,7 @@ func simulateIdler(wg *sync.WaitGroup) {
 }
 
 func Example_idler() {
-	info := logger("main")
+	info := testutils.Logger("main")
 	wg := &sync.WaitGroup{}
 
 	wg.Add(1)
