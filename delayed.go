@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"sync"
 	"time"
+
+	"github.com/sthaha/delayed/testutils"
 )
 
 // Callable is the interface a delayed function call must satisfy
@@ -24,7 +26,7 @@ type Fn struct {
 	t *time.Timer
 }
 
-var debug = logger("delayed")
+var debug = testutils.Logger("delayed")
 
 // NewFn returns an instance of delayed Fn
 func NewFn(d time.Duration, fn func()) *Fn {
